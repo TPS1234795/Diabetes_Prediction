@@ -17,52 +17,72 @@ st.set_page_config(
 
 
 # ----------------------------
-# Custom CSS — colorful, friendly dashboard theme
+# Custom CSS
 # ----------------------------
 st.markdown(
     """
     <style>
+
     /* App background */
     .stApp {
-        background: linear-gradient(135deg, #FFF8F0 0%, #FDF2F8 50%, #F0F9FF 100%);
+        background: linear-gradient(
+            135deg,
+            #FFF8F0 0%,
+            #FDF2F8 50%,
+            #F0F9FF 100%
+        );
     }
 
     /* Sidebar */
     section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #6C5CE7 0%, #A29BFE 100%);
+        background: linear-gradient(
+            180deg,
+            #6C5CE7 0%,
+            #A29BFE 100%
+        );
     }
+
     section[data-testid="stSidebar"] * {
         color: #FFFFFF !important;
     }
+
     section[data-testid="stSidebar"] .stNumberInput input {
         color: #2D3436 !important;
         background-color: #FFFFFF !important;
         border-radius: 10px !important;
     }
+
     section[data-testid="stSidebar"] button {
         color: #2D3436 !important;
     }
 
     /* Header banner */
     .hero-banner {
-        background: linear-gradient(90deg, #FF9A8B 0%, #FF6A88 55%, #FF99AC 100%);
+        background: linear-gradient(
+            90deg,
+            #FF9A8B 0%,
+            #FF6A88 55%,
+            #FF99AC 100%
+        );
         padding: 28px 32px;
         border-radius: 20px;
         margin-bottom: 24px;
         box-shadow: 0 8px 24px rgba(255, 106, 136, 0.25);
     }
+
     .hero-banner h1 {
         color: white;
         margin: 0;
         font-size: 2.1rem;
     }
+
     .hero-banner p {
         color: #FFF5F5;
         margin: 6px 0 0 0;
         font-size: 1.05rem;
     }
 
-    /* Metric-style cards */
+    /* Information cards */
     .info-card {
         background: #FFFFFF;
         border-radius: 16px;
@@ -71,6 +91,7 @@ st.markdown(
         border-left: 6px solid #6C5CE7;
         height: 100%;
     }
+
     .info-card h4 {
         margin: 0 0 4px 0;
         color: #636E72;
@@ -79,6 +100,7 @@ st.markdown(
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
+
     .info-card p {
         margin: 0;
         color: #2D3436;
@@ -86,9 +108,13 @@ st.markdown(
         font-weight: 700;
     }
 
-    /* Result banners */
+    /* Positive result */
     .result-positive {
-        background: linear-gradient(90deg, #FF7675 0%, #FD79A8 100%);
+        background: linear-gradient(
+            90deg,
+            #FF7675 0%,
+            #FD79A8 100%
+        );
         color: white;
         padding: 20px 24px;
         border-radius: 16px;
@@ -97,8 +123,14 @@ st.markdown(
         box-shadow: 0 6px 18px rgba(253, 121, 168, 0.35);
         text-align: center;
     }
+
+    /* Negative result */
     .result-negative {
-        background: linear-gradient(90deg, #55EFC4 0%, #00B894 100%);
+        background: linear-gradient(
+            90deg,
+            #55EFC4 0%,
+            #00B894 100%
+        );
         color: white;
         padding: 20px 24px;
         border-radius: 16px;
@@ -110,7 +142,11 @@ st.markdown(
 
     /* Predict button */
     div.stButton > button {
-        background: linear-gradient(90deg, #6C5CE7 0%, #A29BFE 100%);
+        background: linear-gradient(
+            90deg,
+            #6C5CE7 0%,
+            #A29BFE 100%
+        );
         color: white;
         border: none;
         border-radius: 12px;
@@ -119,18 +155,24 @@ st.markdown(
         font-size: 1rem;
         box-shadow: 0 4px 14px rgba(108, 92, 231, 0.35);
     }
+
     div.stButton > button:hover {
-        background: linear-gradient(90deg, #5A4BD1 0%, #8C84F5 100%);
+        background: linear-gradient(
+            90deg,
+            #5A4BD1 0%,
+            #8C84F5 100%
+        );
         color: white;
     }
 
-    /* Section headers */
+    /* Section title */
     .section-title {
         color: #2D3436;
         font-weight: 700;
         margin-top: 8px;
         margin-bottom: 12px;
     }
+
     </style>
     """,
     unsafe_allow_html=True,
@@ -142,8 +184,13 @@ st.markdown(
 # ----------------------------
 @st.cache_resource
 def load_files():
+
     model = load_model("diabetes_mlp.keras")
-    scaler = joblib.load("diabetes_scaler.pkl")
+
+    scaler = joblib.load(
+        "diabetes_scaler.pkl"
+    )
+
     return model, scaler
 
 
@@ -157,7 +204,11 @@ st.markdown(
     """
     <div class="hero-banner">
         <h1>🩺 Diabetes Prediction Dashboard</h1>
-        <p>Enter patient details in the sidebar to estimate diabetes likelihood.</p>
+
+        <p>
+        Enter patient details in the sidebar to estimate
+        diabetes likelihood.
+        </p>
     </div>
     """,
     unsafe_allow_html=True,
@@ -165,48 +216,132 @@ st.markdown(
 
 
 # ----------------------------
-# Sidebar — patient inputs
+# Sidebar inputs
 # ----------------------------
-st.sidebar.markdown("## 🧾 Patient Details")
-st.sidebar.markdown("Fill in the values below, then hit **Predict**.")
+st.sidebar.markdown(
+    "## 🧾 Patient Details"
+)
+
+st.sidebar.markdown(
+    "Fill in the values below, then hit **Predict**."
+)
+
 st.sidebar.markdown("---")
 
-pregnancies = st.sidebar.number_input("🤰 Pregnancies", min_value=0, value=1)
-glucose = st.sidebar.number_input("🍬 Glucose", min_value=0.0, value=120.0)
-blood_pressure = st.sidebar.number_input("💓 Blood Pressure", min_value=0.0, value=70.0)
-skin_thickness = st.sidebar.number_input("📏 Skin Thickness", min_value=0.0, value=20.0)
-insulin = st.sidebar.number_input("💉 Insulin", min_value=0.0, value=80.0)
-bmi = st.sidebar.number_input("⚖️ BMI", min_value=0.0, value=25.0)
 
-age = st.sidebar.number_input("🎂 Age", min_value=1, value=30)
+pregnancies = st.sidebar.number_input(
+    "🤰 Pregnancies",
+    min_value=0,
+    value=1
+)
+
+
+glucose = st.sidebar.number_input(
+    "🍬 Glucose",
+    min_value=0.0,
+    value=120.0
+)
+
+
+blood_pressure = st.sidebar.number_input(
+    "💓 Blood Pressure",
+    min_value=0.0,
+    value=70.0
+)
+
+
+skin_thickness = st.sidebar.number_input(
+    "📏 Skin Thickness",
+    min_value=0.0,
+    value=20.0
+)
+
+
+insulin = st.sidebar.number_input(
+    "💉 Insulin",
+    min_value=0.0,
+    value=80.0
+)
+
+
+bmi = st.sidebar.number_input(
+    "⚖️ BMI",
+    min_value=0.0,
+    value=25.0
+)
+
+
+# IMPORTANT:
+# Added back because the trained scaler/model
+# expects 8 input features.
+diabetes_pedigree = st.sidebar.number_input(
+    "🧬 Diabetes Pedigree Function",
+    min_value=0.0,
+    value=0.5
+)
+
+
+age = st.sidebar.number_input(
+    "🎂 Age",
+    min_value=1,
+    value=30
+)
+
 
 st.sidebar.markdown("---")
-predict_clicked = st.sidebar.button("🔮 Predict Diabetes", use_container_width=True)
+
+
+predict_clicked = st.sidebar.button(
+    "🔮 Predict Diabetes",
+    use_container_width=True
+)
 
 
 # ----------------------------
-# Main area — quick overview cards
+# Entered values cards
 # ----------------------------
-st.markdown('<p class="section-title">📋 Entered Values</p>', unsafe_allow_html=True)
+st.markdown(
+    '<p class="section-title">📋 Entered Values</p>',
+    unsafe_allow_html=True
+)
+
 
 card_cols = st.columns(4)
+
+
 card_data = [
+
     ("Glucose", f"{glucose:.0f}"),
+
     ("Blood Pressure", f"{blood_pressure:.0f}"),
+
     ("BMI", f"{bmi:.1f}"),
+
     ("Age", f"{age}"),
+
 ]
-for col, (label, value) in zip(card_cols, card_data):
+
+
+for col, (label, value) in zip(
+    card_cols,
+    card_data
+):
+
     with col:
+
         st.markdown(
             f"""
             <div class="info-card">
+
                 <h4>{label}</h4>
+
                 <p>{value}</p>
+
             </div>
             """,
             unsafe_allow_html=True,
         )
+
 
 st.write("")
 
@@ -216,6 +351,10 @@ st.write("")
 # ----------------------------
 if predict_clicked:
 
+
+    # IMPORTANT:
+    # Feature order must be exactly the same
+    # as the order used during model training.
     input_data = np.array([[
         pregnancies,
         glucose,
@@ -223,77 +362,228 @@ if predict_clicked:
         skin_thickness,
         insulin,
         bmi,
+        diabetes_pedigree,
         age,
     ]])
 
-    input_scaled = scaler.transform(input_data)
-    probability = model.predict(input_scaled, verbose=0)[0][0]
+
+    # Scale input
+    input_scaled = scaler.transform(
+        input_data
+    )
+
+
+    # Model prediction
+    probability = model.predict(
+        input_scaled,
+        verbose=0
+    )[0][0]
+
+
     prob_pct = probability * 100
 
-    st.markdown('<p class="section-title">🎯 Prediction Result</p>', unsafe_allow_html=True)
 
-    result_col, gauge_col = st.columns([1, 1.2])
+    # Prediction result heading
+    st.markdown(
+        '<p class="section-title">'
+        '🎯 Prediction Result'
+        '</p>',
+        unsafe_allow_html=True
+    )
 
+
+    result_col, gauge_col = st.columns(
+        [1, 1.2]
+    )
+
+
+    # ----------------------------
+    # Result
+    # ----------------------------
     with result_col:
+
+
         if probability >= 0.5:
+
             st.markdown(
-                f'<div class="result-positive">⚠️ Prediction: Diabetic<br>'
-                f'Probability: {prob_pct:.2f}%</div>',
+                f"""
+                <div class="result-positive">
+
+                ⚠️ Prediction: Diabetic
+
+                <br>
+
+                Probability: {prob_pct:.2f}%
+
+                </div>
+                """,
                 unsafe_allow_html=True,
             )
+
+
         else:
+
             st.markdown(
-                f'<div class="result-negative">✅ Prediction: Non-Diabetic<br>'
-                f'Probability: {prob_pct:.2f}%</div>',
+                f"""
+                <div class="result-negative">
+
+                ✅ Prediction: Non-Diabetic
+
+                <br>
+
+                Probability: {prob_pct:.2f}%
+
+                </div>
+                """,
                 unsafe_allow_html=True,
             )
+
 
         st.write("")
+
+
         st.caption(
-            "This estimate is based on the patient details provided and the "
+            "This estimate is based on the "
+            "patient details provided and the "
             "trained model's output probability."
         )
 
-    with gauge_col:
-        gauge_color = "#FF6A88" if probability >= 0.5 else "#00B894"
-        fig = go.Figure(
-            go.Indicator(
-                mode="gauge+number",
-                value=prob_pct,
-                number={"suffix": "%", "font": {"size": 36}},
-                gauge={
-                    "axis": {"range": [0, 100], "tickcolor": "#636E72"},
-                    "bar": {"color": gauge_color},
-                    "bgcolor": "white",
-                    "borderwidth": 0,
-                    "steps": [
-                        {"range": [0, 50], "color": "#DFF9F0"},
-                        {"range": [50, 100], "color": "#FFE3E8"},
-                    ],
-                    "threshold": {
-                        "line": {"color": "#2D3436", "width": 3},
-                        "thickness": 0.8,
-                        "value": 50,
-                    },
-                },
-            )
-        )
-        fig.update_layout(
-            height=260,
-            margin=dict(l=20, r=20, t=20, b=10),
-            paper_bgcolor="rgba(0,0,0,0)",
-            font={"color": "#2D3436"},
-        )
-        st.plotly_chart(fig, use_container_width=True)
 
+    # ----------------------------
+    # Gauge chart
+    # ----------------------------
+    with gauge_col:
+
+
+        gauge_color = (
+            "#FF6A88"
+            if probability >= 0.5
+            else "#00B894"
+        )
+
+
+        fig = go.Figure(
+
+
+            go.Indicator(
+
+
+                mode="gauge+number",
+
+
+                value=prob_pct,
+
+
+                number={
+                    "suffix": "%",
+                    "font": {
+                        "size": 36
+                    }
+                },
+
+
+                gauge={
+
+
+                    "axis": {
+                        "range": [0, 100],
+                        "tickcolor": "#636E72"
+                    },
+
+
+                    "bar": {
+                        "color": gauge_color
+                    },
+
+
+                    "bgcolor": "white",
+
+
+                    "borderwidth": 0,
+
+
+                    "steps": [
+
+                        {
+                            "range": [0, 50],
+                            "color": "#DFF9F0"
+                        },
+
+                        {
+                            "range": [50, 100],
+                            "color": "#FFE3E8"
+                        },
+
+                    ],
+
+
+                    "threshold": {
+
+                        "line": {
+                            "color": "#2D3436",
+                            "width": 3
+                        },
+
+                        "thickness": 0.8,
+
+                        "value": 50,
+
+                    },
+
+
+                },
+
+
+            )
+
+
+        )
+
+
+        fig.update_layout(
+
+            height=260,
+
+            margin=dict(
+                l=20,
+                r=20,
+                t=20,
+                b=10
+            ),
+
+            paper_bgcolor="rgba(0,0,0,0)",
+
+            font={
+                "color": "#2D3436"
+            },
+
+        )
+
+
+        st.plotly_chart(
+            fig,
+            use_container_width=True
+        )
+
+
+# ----------------------------
+# Before prediction
+# ----------------------------
 else:
-    st.info("👈 Fill in the patient details in the sidebar and click **Predict Diabetes** to see results here.")
+
+    st.info(
+        "👈 Fill in the patient details in the "
+        "sidebar and click **Predict Diabetes** "
+        "to see results here."
+    )
 
 
 # ----------------------------
 # Disclaimer
 # ----------------------------
 st.divider()
+
+
 st.caption(
     "For academic and educational purposes only. "
     "This application is not a medical diagnostic tool."
