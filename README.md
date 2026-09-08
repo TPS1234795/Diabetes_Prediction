@@ -4,6 +4,12 @@ A Machine Learning-based web application that predicts the likelihood of diabete
 
 ---
 
+## 🌐 Live Application
+
+The Diabetes Prediction System is deployed using Streamlit Community Cloud.
+
+🔗 **Live Demo:** [Click here to use the Diabetes Prediction App](https://diabetesprediction-dcj9vkvsc84as82cnypg5t.streamlit.app/)
+
 ## 🚀 Technologies Used
 
 - Python
